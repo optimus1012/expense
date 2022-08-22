@@ -48,25 +48,72 @@ class _MyHomePageState extends State<MyHomePage> {
 
     )
   ];
+
+  final titleController = TextEditingController();
+  final amountController = TextEditingController();
+  _addTransaction(String title,double amount)
+  {
+      print(title);
+      print(amount);
+      var newTr = Transaction(
+          id: '1',
+          title: title,
+          amount: amount,
+          dateTime: DateTime.now(),
+      );
+      setState(() {
+        transaction.add(newTr);
+      });
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Expence'),
       ),
-      body: ListView.builder(
-        itemCount: transaction.length,
-          itemBuilder: (BuildContext context,int index){
-            //return Text(transaction[index].toString());
-            return Column(
-                children: [
-                Text("${transaction[index].id}"),
-            Text("${transaction[index].title}"),
-            Text("${transaction[index].amount}"),
-            Text("${transaction[index].dateTime}"),
-                ],
-            );
-          }
+      body: Column(
+
+        children: [
+          Card(
+            elevation: 5,
+            child: Column(
+              children: [
+                TextField(
+                  controller:titleController,
+                  decoration: InputDecoration(hintText: "Title"),
+                ),
+                TextField(
+                  controller:amountController,
+                  decoration: InputDecoration(hintText: "Amount"),
+                ),
+                ElevatedButton(onPressed: (){
+                  print(titleController.text);
+                  print(amountController.text);
+
+                  _addTransaction(titleController.text,double.parse(amountController.text));
+
+                }, child: Text('Submit')
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: transaction.length,
+                itemBuilder: (BuildContext context,int index){
+                  //return Text(transaction[index].toString());
+                  //
+                  return ListTile(
+                    leading: Text('${transaction[index].id}'),
+                    title: Text('${transaction[index].title}'),
+                    subtitle: Text('${transaction[index].dateTime}'),
+                    trailing: Text('${transaction[index].amount}'),
+                  );
+                }
+            ),
+          ),
+        ],
       ),
     );
   }
